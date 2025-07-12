@@ -326,7 +326,7 @@ const DeveloperProfile = () => {
   const developer = developers.find(dev => dev.id === parseInt(id)) || developers[0];
 
   return (
-    <div className="min-h-screen pt-8">
+    <div className="min-h-screen">
       {/* Header */}
       <section className="py-12 bg-gradient-to-br from-primary/5 to-secondary/5">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
