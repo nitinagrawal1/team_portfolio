@@ -190,12 +190,24 @@ const Portfolio = () => {
                       </Badge>
                     </div>
                     <div className="flex space-x-2">
-                      <Button variant="ghost" size="sm">
-                        <Github className="w-4 h-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <ExternalLink className="w-4 h-4" />
-                      </Button>
+                      {project.githubUrl && project.githubUrl !== "#" && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => window.open(project.githubUrl, '_blank')}
+                        >
+                          <Github className="w-4 h-4" />
+                        </Button>
+                      )}
+                      {project.liveUrl && project.liveUrl !== "#" && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => window.open(project.liveUrl, '_blank')}
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </CardHeader>
