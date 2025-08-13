@@ -1,286 +1,257 @@
+import React, { useState } from 'react';
+import { Mail, Phone, MapPin, ArrowRight, Users, Award, Clock, Target } from 'lucide-react';
 
-import { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Clock, Users, Award } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+const FONT_STYLE = { fontFamily: "Montserrat, sans-serif" };
+const PRIMARY_ACCENT = "text-purple-400";
+const DARK_BG = "bg-black";
+const LIGHT_TEXT = "text-gray-200";
+const MUTED_TEXT = "text-gray-400";
+const SECONDARY_BG = "bg-gray-900";
+const ACCENT_COLOR = "purple"; // Using this for Tailwind classes like bg-purple-600
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     email: '',
-    company: '',
-    service: '',
+    phone: '',
+    location: '',
+    expertise: '',
     budget: '',
-    timeline: '',
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle form submission here
-  };
+const handleSubmit = async () => {
+  // Frontend validation
+  for (const [key, value] of Object.entries(formData)) {
+    if (!value.trim()) {
+      alert(`❌ Please fill in the ${key} field.`);
+      return;
+    }
+  }
 
-  const handleInputChange = (field: string, value: string) => {
+  try {
+    const res = await fetch("http://localhost:5000/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData)
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("✅ Thank you! Your message has been sent.");
+      setFormData({
+        fullName: '',
+        email: '',
+        phone: '',
+        location: '',
+        expertise: '',
+        budget: '',
+        message: ''
+      });
+    } else {
+      alert("❌ Failed to send: " + data.error);
+    }
+  } catch (error) {
+    alert("❌ Network error: " + error.message);
+  }
+};
+
+
+
+  const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const contactInfo = [
-    {
-      icon: Mail,
-      title: "Email Us",
-      detail: "hello@devcommunity.com",
-      description: "Send us an email anytime"
-    },
-    {
-      icon: Phone,
-      title: "Call Us",
-      detail: "+1 (555) 123-4567",
-      description: "Mon-Fri from 9am to 6pm EST"
-    },
-    {
-      icon: MapPin,
-      title: "Visit Us",
-      detail: "San Francisco, CA",
-      description: "Schedule a meeting at our office"
-    }
-  ];
-
-  const faqs = [
-    {
-      question: "How long does a typical project take?",
-      answer: "Project timelines vary based on complexity. Simple websites take 2-3 weeks, while complex applications can take 2-3 months."
-    },
-    {
-      question: "Do you provide ongoing maintenance?",
-      answer: "Yes, we offer maintenance packages to keep your application updated, secure, and running smoothly."
-    },
-    {
-      question: "Can you work with my existing team?",
-      answer: "Absolutely! We're experienced in collaborating with in-house teams and other agencies."
-    },
-    {
-      question: "What's your payment structure?",
-      answer: "We typically work with 50% upfront and 50% on completion for smaller projects, with milestone-based payments for larger ones."
-    }
-  ];
-
   const stats = [
-    { icon: Users, number: "500+", label: "Happy Clients" },
-    { icon: Award, number: "1000+", label: "Projects Completed" },
-    { icon: Clock, number: "24/7", label: "Support Available" }
+    { number: "150+", label: "Projects Delivered", icon: Award },
+    { number: "98%", label: "Client Satisfaction", icon: Users },
+    { number: "24/7", label: "Support Available", icon: Clock },
+    { number: "5+", label: "Years Experience", icon: Target }
   ];
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <section className="py-16 bg-gradient-to-br from-primary/5 to-secondary/5">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Get In Touch
+    <div className={`${DARK_BG} min-h-screen text-white`} style={FONT_STYLE}>
+      {/* Hero Section with Background Image */}
+      <section 
+        className="relative py-20 px-6 bg-cover bg-center text-white overflow-hidden" 
+        style={{ 
+          backgroundImage: `url('https://images.unsplash.com/photo-1542435503-956c469947f6?q=80&w=2670&auto=format&fit=crop')` 
+        }}
+      >
+        {/* Dark overlay to match the CTA section on About page */}
+        <div className="absolute inset-0 bg-black/60"></div>
+        <div className="relative max-w-7xl mx-auto text-center">
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-light mb-8 leading-tight">
+            Let's get in touch
+            <br />
+            <span className="font-bold text-white">for your next project</span>
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
-            Ready to start your next project? Let's discuss how we can help you achieve your goals.
+          <p className={`text-lg sm:text-xl ${LIGHT_TEXT} max-w-2xl mx-auto mb-12 leading-relaxed`}>
+            We partner with forward-thinking companies to create digital experiences that drive meaningful results.
           </p>
-          
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-            {stats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <div key={index} className="text-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Icon className="w-8 h-8 text-primary" />
-                  </div>
-                  <div className="text-2xl font-bold text-foreground">{stat.number}</div>
-                  <div className="text-muted-foreground">{stat.label}</div>
-                </div>
-              );
-            })}
-          </div>
         </div>
       </section>
 
-      {/* Contact Form & Info */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl">Send us a message</CardTitle>
-                <p className="text-muted-foreground">
-                  Fill out the form below and we'll get back to you within 24 hours.
-                </p>
-              </CardHeader>
-              
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Name *</label>
-                      <Input
-                        type="text"
-                        value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        placeholder="Your full name"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Email *</label>
-                      <Input
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        placeholder="your@email.com"
-                        required
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Company</label>
-                    <Input
-                      type="text"
-                      value={formData.company}
-                      onChange={(e) => handleInputChange('company', e.target.value)}
-                      placeholder="Your company name"
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Service Needed</label>
-                      <Select onValueChange={(value) => handleInputChange('service', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a service" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="web-development">Web Development</SelectItem>
-                          <SelectItem value="mobile-development">Mobile Development</SelectItem>
-                          <SelectItem value="ui-ux-design">UI/UX Design</SelectItem>
-                          <SelectItem value="backend-development">Backend Development</SelectItem>
-                          <SelectItem value="devops-cloud">DevOps & Cloud</SelectItem>
-                          <SelectItem value="consulting">Consulting</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Budget Range</label>
-                      <Select onValueChange={(value) => handleInputChange('budget', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select budget" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="under-5k">Under $5,000</SelectItem>
-                          <SelectItem value="5k-10k">$5,000 - $10,000</SelectItem>
-                          <SelectItem value="10k-25k">$10,000 - $25,000</SelectItem>
-                          <SelectItem value="25k-50k">$25,000 - $50,000</SelectItem>
-                          <SelectItem value="over-50k">$50,000+</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Project Timeline</label>
-                    <Select onValueChange={(value) => handleInputChange('timeline', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="When do you need this completed?" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="asap">ASAP</SelectItem>
-                        <SelectItem value="1-month">Within 1 month</SelectItem>
-                        <SelectItem value="2-3-months">2-3 months</SelectItem>
-                        <SelectItem value="3-6-months">3-6 months</SelectItem>
-                        <SelectItem value="6-plus-months">6+ months</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Project Details *</label>
-                    <Textarea
-                      value={formData.message}
-                      onChange={(e) => handleInputChange('message', e.target.value)}
-                      placeholder="Tell us about your project, requirements, and any specific features you need..."
-                      rows={5}
-                      required
-                    />
-                  </div>
-                  
-                  <Button type="submit" size="lg" className="w-full">
-                    <Send className="w-4 h-4 mr-2" />
-                    Send Message
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+      {/* Main Content */}
+      <div className="flex flex-col lg:flex-row">
+        {/* Left Side - Content */}
+        <div className="flex-1 px-8 lg:px-20 py-20 flex flex-col justify-center">
+          <div className="max-w-xl">
+            <h1 className="text-4xl sm:text-5xl font-light mb-8 leading-tight">
+              Connect with
+              <br />
+              <span className="font-bold">Our Team of Experts</span>
+            </h1>
 
-            {/* Contact Info & FAQs */}
-            <div className="space-y-8">
-              {/* Contact Information */}
-              <div>
-                <h2 className="text-2xl font-bold mb-6">Get in touch</h2>
-                <div className="space-y-6">
-                  {contactInfo.map((info, index) => {
-                    const Icon = info.icon;
-                    return (
-                      <div key={index} className="flex items-start space-x-4">
-                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                          <Icon className="w-6 h-6 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">{info.title}</h3>
-                          <p className="text-primary font-medium">{info.detail}</p>
-                          <p className="text-sm text-muted-foreground">{info.description}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+            <p className={`text-lg ${MUTED_TEXT} mb-12 leading-relaxed`}>
+              Contact our team of excellence-driven experts today to bring your project to life.
+            </p>
 
-              {/* FAQ */}
-              <div>
-                <h2 className="text-2xl font-bold mb-6">Frequently Asked</h2>
-                <div className="space-y-4">
-                  {faqs.slice(0, 3).map((faq, index) => (
-                    <Card key={index}>
-                      <CardContent className="pt-6">
-                        <h4 className="font-semibold mb-2">{faq.question}</h4>
-                        <p className="text-sm text-muted-foreground">{faq.answer}</p>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+            {/* Contact Info */}
+            <div className="space-y-6 mb-12">
+              <div className="flex items-center space-x-4">
+                <Phone className={`w-5 h-5 ${PRIMARY_ACCENT}`} />
+                <span className={`${LIGHT_TEXT} font-medium`}>713.953.5200</span>
               </div>
+              <div className="flex items-center space-x-4">
+                <Mail className={`w-5 h-5 ${PRIMARY_ACCENT}`} />
+                <span className={`${LIGHT_TEXT} font-medium`}>lp@ljp.com</span>
+              </div>
+              <div className="flex items-center space-x-4">
+                <MapPin className={`w-5 h-5 ${PRIMARY_ACCENT}`} />
+                <span className={`${LIGHT_TEXT} font-medium`}>See Our Locations</span>
+              </div>
+            </div>
+
+            {/* Team Image Section */}
+            <div className="relative">
+              <img
+                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                alt="Professional team member"
+                className="w-full h-80 object-cover rounded-2xl shadow-lg"
+              />
             </div>
           </div>
         </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-primary text-primary-foreground">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Ideas?</h2>
-          <p className="text-xl mb-8 opacity-90">
-            Join hundreds of satisfied clients who have brought their visions to life with our expert development team.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="secondary" size="lg">
-              Schedule Free Consultation
-            </Button>
-            <Button variant="outline" size="lg">
-              View Our Portfolio
-            </Button>
+        {/* Right Side - Form */}
+        <div className={`w-full lg:w-1/2 ${SECONDARY_BG} px-8 py-20 lg:px-20 flex flex-col justify-center`}>
+          <div className="max-w-2xl mx-auto w-full">
+            <h2 className="text-3xl font-light text-white mb-8">
+              Send us a <span className="font-bold">message</span>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Full Name & Email */}
+              <div className="col-span-1">
+                <label htmlFor="fullName" className={`block ${MUTED_TEXT} text-sm font-medium mb-2`}>Full Name</label>
+                <input
+                  type="text"
+                  id="fullName"
+                  value={formData.fullName}
+                  onChange={(e) => handleInputChange('fullName', e.target.value)}
+                  placeholder="Full Name"
+                  className={`w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-white placeholder-gray-500`}
+                />
+              </div>
+              <div className="col-span-1">
+                <label htmlFor="email" className={`block ${MUTED_TEXT} text-sm font-medium mb-2`}>Email Address</label>
+                <input
+                  type="email"
+                  id="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  placeholder="Email Address"
+                  className={`w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-white placeholder-gray-500`}
+                />
+              </div>
+
+              {/* Phone Number & Location */}
+              <div className="col-span-1">
+                <label htmlFor="phone" className={`block ${MUTED_TEXT} text-sm font-medium mb-2`}>Phone Number</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  placeholder="Phone Number"
+                  className={`w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-white placeholder-gray-500`}
+                />
+              </div>
+              <div className="col-span-1">
+                <label htmlFor="location" className={`block ${MUTED_TEXT} text-sm font-medium mb-2`}>Location</label>
+                <input
+                  type="text"
+                  id="location"
+                  value={formData.location}
+                  onChange={(e) => handleInputChange('location', e.target.value)}
+                  placeholder="Location"
+                  className={`w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-white placeholder-gray-500`}
+                />
+              </div>
+
+              {/* Expertise */}
+              <div className="md:col-span-2">
+                <label htmlFor="expertise" className={`block ${MUTED_TEXT} text-sm font-medium mb-2`}>What Expertise You're Interested In</label>
+                <select
+                  id="expertise"
+                  value={formData.expertise}
+                  onChange={(e) => handleInputChange('expertise', e.target.value)}
+                  className={`w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all appearance-none ${LIGHT_TEXT}`}
+                >
+                  <option value="" className={`${SECONDARY_BG} ${MUTED_TEXT}`}>Select</option>
+                  <option value="web-development" className={`${SECONDARY_BG} text-white`}>Web Development</option>
+                  <option value="mobile-development" className={`${SECONDARY_BG} text-white`}>Mobile Development</option>
+                  <option value="ui-ux-design" className={`${SECONDARY_BG} text-white`}>UI/UX Design</option>
+                  <option value="backend-development" className={`${SECONDARY_BG} text-white`}>Backend Development</option>
+                  <option value="devops-cloud" className={`${SECONDARY_BG} text-white`}>DevOps & Cloud</option>
+                  <option value="consulting" className={`${SECONDARY_BG} text-white`}>Consulting</option>
+                </select>
+              </div>
+
+              {/* Budget */}
+              <div className="md:col-span-2">
+                <label htmlFor="budget" className={`block ${MUTED_TEXT} text-sm font-medium mb-2`}>Budget Range</label>
+                <select
+                  id="budget"
+                  value={formData.budget}
+                  onChange={(e) => handleInputChange('budget', e.target.value)}
+                  className={`w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all appearance-none ${LIGHT_TEXT}`}
+                >
+                  <option value="" className={`${SECONDARY_BG} ${MUTED_TEXT}`}>Select Budget</option>
+                  <option value="under-10k" className={`${SECONDARY_BG} text-white`}>Under $10k</option>
+                  <option value="10k-25k" className={`${SECONDARY_BG} text-white`}>$10k - $25k</option>
+                  <option value="25k-50k" className={`${SECONDARY_BG} text-white`}>$25k - $50k</option>
+                  <option value="50k-100k" className={`${SECONDARY_BG} text-white`}>$50k - $100k</option>
+                  <option value="over-100k" className={`${SECONDARY_BG} text-white`}>$100k+</option>
+                </select>
+              </div>
+
+              {/* Message */}
+              <div className="md:col-span-2">
+                <label htmlFor="message" className={`block ${MUTED_TEXT} text-sm font-medium mb-2`}>Tell Us About Your Project</label>
+                <textarea
+                  id="message"
+                  value={formData.message}
+                  onChange={(e) => handleInputChange('message', e.target.value)}
+                  placeholder="Leave your message here"
+                  rows={4}
+                  className={`w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all resize-none text-white placeholder-gray-500`}
+                />
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className={`mt-8 w-full bg-${ACCENT_COLOR}-600 hover:bg-${ACCENT_COLOR}-500 text-white font-semibold py-3 px-6 rounded-md transition-all duration-300 flex items-center justify-center space-x-2 group`}
+            >
+              <span className="text-xl">SUBMIT</span>
+              <ArrowRight className={`w-4 h-4 group-hover:translate-x-1 transition-transform duration-300`} />
+            </button>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

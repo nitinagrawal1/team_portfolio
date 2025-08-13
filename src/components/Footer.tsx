@@ -1,34 +1,41 @@
-
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Code2, Twitter, Github, Linkedin, Mail } from 'lucide-react';
 
+// Reusing consistent styles from other components
+const FONT_STYLE = { fontFamily: "Montserrat, sans-serif" };
+const PRIMARY_ACCENT = "text-purple-400";
+const DARK_BG = "bg-gray-950";
+const LIGHT_TEXT = "text-gray-100";
+const MUTED_TEXT = "text-gray-400";
+
 const Footer = () => {
   return (
-    <footer className="bg-muted/50 border-t border-border mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className={`${DARK_BG} border-t border-gray-700`} style={FONT_STYLE}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Code2 className="w-5 h-5 text-primary-foreground" />
+              <div className="w-8 h-8 bg-purple-600/30 rounded-lg flex items-center justify-center">
+                <Code2 className={`w-5 h-5 ${PRIMARY_ACCENT}`} />
               </div>
-              <span className="font-bold text-xl text-foreground">DevCommunity</span>
+              <span className={`font-bold text-xl ${LIGHT_TEXT}`}>DevCommunity</span>
             </div>
-            <p className="text-muted-foreground text-sm">
+            <p className={`text-sm ${MUTED_TEXT}`}>
               Connecting talented freelance developers with amazing projects worldwide.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a href="#" className={`${MUTED_TEXT} hover:text-white transition-colors`}>
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a href="#" className={`${MUTED_TEXT} hover:text-white transition-colors`}>
                 <Github className="w-5 h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a href="#" className={`${MUTED_TEXT} hover:text-white transition-colors`}>
                 <Linkedin className="w-5 h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a href="#" className={`${MUTED_TEXT} hover:text-white transition-colors`}>
                 <Mail className="w-5 h-5" />
               </a>
             </div>
@@ -36,38 +43,38 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">Quick Links</h3>
+            <h3 className={`font-semibold ${LIGHT_TEXT} mb-4`}>Quick Links</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors">About Us</Link></li>
-              <li><Link to="/developers" className="text-muted-foreground hover:text-foreground transition-colors">Find Developers</Link></li>
-              <li><Link to="/portfolio" className="text-muted-foreground hover:text-foreground transition-colors">Portfolio</Link></li>
-              <li><Link to="/services" className="text-muted-foreground hover:text-foreground transition-colors">Services</Link></li>
+              <li><Link to="/about" className={`${MUTED_TEXT} hover:text-white transition-colors`}>About Us</Link></li>
+              <li><Link to="/developers" className={`${MUTED_TEXT} hover:text-white transition-colors`}>Find Developers</Link></li>
+              <li><Link to="/portfolio" className={`${MUTED_TEXT} hover:text-white transition-colors`}>Portfolio</Link></li>
+              <li><Link to="/services" className={`${MUTED_TEXT} hover:text-white transition-colors`}>Services</Link></li>
             </ul>
           </div>
 
           {/* Services */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">Services</h3>
+            <h3 className={`font-semibold ${LIGHT_TEXT} mb-4`}>Services</h3>
             <ul className="space-y-2 text-sm">
-              <li><span className="text-muted-foreground">Web Development</span></li>
-              <li><span className="text-muted-foreground">Mobile Apps</span></li>
-              <li><span className="text-muted-foreground">UI/UX Design</span></li>
-              <li><span className="text-muted-foreground">Backend Development</span></li>
+              <li><span className={`${MUTED_TEXT}`}>Web Development</span></li>
+              <li><span className={`${MUTED_TEXT}`}>Mobile Apps</span></li>
+              <li><span className={`${MUTED_TEXT}`}>UI/UX Design</span></li>
+              <li><span className={`${MUTED_TEXT}`}>Backend Development</span></li>
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">Contact</h3>
+            <h3 className={`font-semibold ${LIGHT_TEXT} mb-4`}>Contact</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>hello@devcommunity.com</li>
-              <li>+1 (555) 123-4567</li>
-              <li>San Francisco, CA</li>
+              <li className={`${MUTED_TEXT}`}>hello@devcommunity.com</li>
+              <li className={`${MUTED_TEXT}`}>+1 (555) 123-4567</li>
+              <li className={`${MUTED_TEXT}`}>San Francisco, CA</li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
+        <div className="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-500">
           <p>&copy; 2024 DevCommunity. All rights reserved.</p>
         </div>
       </div>

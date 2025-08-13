@@ -1,8 +1,15 @@
-
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Code2, Users, Briefcase, Mail, Info, Home } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+
+// Reusing consistent styles from other components
+const FONT_STYLE = { fontFamily: "Montserrat, sans-serif" };
+const PRIMARY_ACCENT = "text-purple-400";
+const DARK_BG_TRANSPARENT = "bg-black/80";
+const LIGHT_TEXT = "text-gray-100";
+const MUTED_TEXT = "text-gray-400";
+const ACCENT_HOVER = "hover:text-white hover:bg-gray-800";
+const ACCENT_BUTTON_GRADIENT = "bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,20 +25,24 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+    <nav 
+      className={`sticky top-0 z-50 ${DARK_BG_TRANSPARENT} backdrop-blur-md border-b border-gray-700 shadow-md transition-colors duration-300`}
+      style={FONT_STYLE}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-16 items-center">
+          {/* Logo Section */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Code2 className="w-5 h-5 text-primary-foreground" />
+            <Link to="/" className="flex items-center space-x-2 sm:space-x-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-600/30 rounded-full flex items-center justify-center">
+                <Code2 className={`w-5 h-5 sm:w-6 sm:h-6 ${PRIMARY_ACCENT}`} />
               </div>
-              <span className="font-bold text-xl text-foreground">DevCommunity</span>
+              <span className={`font-bold text-lg sm:text-xl md:text-2xl ${LIGHT_TEXT}`}>DevCommunity</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-1 lg:space-x-2 xl:space-x-4">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
@@ -39,37 +50,43 @@ const Navigation = () => {
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center space-x-2 px-2 py-2 rounded-full text-sm font-medium transition-colors ${
                     isActive
-                      ? 'text-primary bg-primary/10'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                      ? `${PRIMARY_ACCENT} bg-purple-400/10`
+                      : `${MUTED_TEXT} ${ACCENT_HOVER}`
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  <span>{item.name}</span>
+                  <span className="hidden lg:block">{item.name}</span>
                 </Link>
               );
             })}
-            <Button size="sm" className="ml-4">
+            <button 
+              className={`ml-4 text-white font-medium py-2 px-4 rounded-full transition-all duration-300 ${ACCENT_BUTTON_GRADIENT} hover:scale-105 transform`}
+            >
               Join Community
-            </Button>
+            </button>
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
+              className="text-gray-400 hover:text-white"
               onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle mobile menu"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </Button>
+            </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden py-4 space-y-2 animate-fade-in">
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
+            isOpen ? 'max-h-screen opacity-100 py-4' : 'max-h-0 opacity-0 py-0'
+          }`}
+        >
+          <div className="space-y-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
@@ -78,24 +95,26 @@ const Navigation = () => {
                   key={item.name}
                   to={item.path}
                   onClick={() => setIsOpen(false)}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center space-x-3 px-4 py-2 rounded-md text-base font-medium transition-colors duration-300 ${
                     isActive
-                      ? 'text-primary bg-primary/10'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                      ? `${PRIMARY_ACCENT} bg-purple-400/10`
+                      : `${MUTED_TEXT} ${ACCENT_HOVER}`
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-5 h-5" />
                   <span>{item.name}</span>
                 </Link>
               );
             })}
             <div className="pt-2">
-              <Button size="sm" className="w-full">
+              <button 
+                className={`w-full text-white font-medium py-3 px-5 rounded-full transition-all duration-300 ${ACCENT_BUTTON_GRADIENT} hover:scale-105 transform`}
+              >
                 Join Community
-              </Button>
+              </button>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </nav>
   );

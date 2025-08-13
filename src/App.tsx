@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,8 +13,10 @@ import DeveloperProfile from "./pages/DeveloperProfile";
 import NotFound from "./pages/NotFound";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
+import ScrollToTop from './components/ScrollToTop';
 
 const queryClient = new QueryClient();
+
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -23,18 +24,23 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="min-h-screen bg-background">
+        <ScrollToTop />
+        {/* The fix is implemented here by making the main container a flexbox */}
+        <div className="flex flex-col min-h-screen">
           <Navigation />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/developers" element={<Developers />} />
-            <Route path="/developer/:id" element={<DeveloperProfile />} />
-            <Route path="/portfolio" element={<Portfolio />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          {/* The main content area now uses flex-grow to expand and push the footer down */}
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/developers" element={<Developers />} />
+              <Route path="/developer/:id" element={<DeveloperProfile />} />
+              <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
           <Footer />
         </div>
       </BrowserRouter>
